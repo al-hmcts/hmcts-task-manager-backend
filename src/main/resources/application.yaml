@@ -1,6 +1,7 @@
 server:
   port: 4000
   shutdown: "graceful"
+  forward-headers-strategy: framework
 
 # If you want to use a database then uncomment the `group:, readiness: and include: "db"`
 # lines in the health probes and uncomment the datasource section

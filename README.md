@@ -32,6 +32,8 @@ To get started with the project, follow these steps:
       -d postgres
    ```
 
+Swagger API docs when running http://localhost:4000/swagger-ui/index.html
+
 ### Repository Structure
 
 ```

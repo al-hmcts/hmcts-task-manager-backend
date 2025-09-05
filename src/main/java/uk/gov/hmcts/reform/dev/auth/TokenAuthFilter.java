@@ -42,6 +42,9 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         String path = req.getRequestURI();
         // allow unauthenticated endpoints here
         return path.startsWith("/actuator")
+            || path.startsWith("/health")
+            || path.contains("swagger-ui")
+            || path.contains("api-docs")
             || path.startsWith("/api/auth/login")
             || ("OPTIONS".equalsIgnoreCase(req.getMethod())); // CORS preflight
     }
