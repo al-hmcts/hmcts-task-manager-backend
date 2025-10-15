@@ -46,6 +46,7 @@ public class TokenAuthFilter extends OncePerRequestFilter {
             || path.contains("swagger-ui")
             || path.contains("api-docs")
             || path.startsWith("/api/auth/login")
+            || path.startsWith("/api/auth/logout")
             || ("OPTIONS".equalsIgnoreCase(req.getMethod())); // CORS preflight
     }
 
