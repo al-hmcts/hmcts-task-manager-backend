@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TaskTest {
 
     @Autowired
-    private transient MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Autowired
     SessionService sessionService;

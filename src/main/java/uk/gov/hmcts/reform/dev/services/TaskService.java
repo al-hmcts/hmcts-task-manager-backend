@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.dev.enities.Task;
+import uk.gov.hmcts.reform.dev.exceptions.BankHolidayException;
 import uk.gov.hmcts.reform.dev.exceptions.TaskNotFoundException;
 import uk.gov.hmcts.reform.dev.models.Status;
 import uk.gov.hmcts.reform.dev.models.dtos.TaskInfo;
@@ -17,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final BankHolidayService bankHolidayService;
 
     /**
      * Retrieves all tasks from the repository, ordered by creation date descending.
@@ -63,8 +65,11 @@ public class TaskService {
             .updatedAt(LocalDateTime.now())
             .build();
 
-        Task savedTask = taskRepository.save(taskToAdd);
+        if (!bankHolidayService.dateIsNotBankHoliday(taskToAdd.getDueDate())) {
+            throw new BankHolidayException("Due date is a bank holiday");
+        }
 
+        Task savedTask = taskRepository.save(taskToAdd);
         return savedTask.getId();
     }
 
@@ -105,5 +110,6 @@ public class TaskService {
 
         taskRepository.delete(taskToUpdate);
     }
+
 }
 

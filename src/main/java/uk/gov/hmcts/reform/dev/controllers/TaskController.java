@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.reform.dev.exceptions.BankHolidayException;
 import uk.gov.hmcts.reform.dev.exceptions.TaskNotFoundException;
 import uk.gov.hmcts.reform.dev.models.Status;
 import uk.gov.hmcts.reform.dev.models.requests.TaskRequest;
@@ -62,15 +63,19 @@ public class TaskController {
      * @return a {@link ResponseEntity} containing the ID of the newly created task
      */
     @PostMapping
-    public ResponseEntity<Long> createTask(@Valid @RequestBody TaskRequest taskRequest) {
-        Long newTaskId = taskService.createTask(
-            sanitize(taskRequest.title()),
-            sanitize(taskRequest.description()),
-            Status.getStatus(taskRequest.status()),
-            taskRequest.dueDate()
-        );
+    public ResponseEntity<Long> createTask(@RequestBody TaskRequest taskRequest) {
+       try {
+           Long newTaskId = taskService.createTask(
+               sanitize(taskRequest.title()),
+               sanitize(taskRequest.description()),
+               Status.getStatus(taskRequest.status()),
+               taskRequest.dueDate()
+           );
 
-        return ResponseEntity.ok(newTaskId);
+           return ResponseEntity.ok(newTaskId);
+       } catch (BankHolidayException e) {
+           return ResponseEntity.badRequest().build();
+       }
     }
 
     /**
